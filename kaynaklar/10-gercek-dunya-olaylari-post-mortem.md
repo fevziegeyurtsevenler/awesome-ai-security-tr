@@ -1,12 +1,13 @@
 # LLM ve AI Güvenlik Olayları
 
-
 ## Giriş
 
 Yapay zeka (AI) ve büyük dil modelleri (LLM); müşteri hizmetleri otomasyonlarından otonom yazılım geliştirme ajanlarına kadar modern dijital altyapıların merkezine yerleşmiştir. Ancak bu hızla benimsenme süreci, geleneksel yazılım güvenliği açıklarının çok ötesinde, model manipülasyonu, dolaylı prompt injection, ajan yetki aşımı (excessive agency) ve veri sızıntısı gibi yepyeni bir tehdit ekosistemini de beraberinde getirmiştir. 
 
 Bu doküman, günümüz endüstrisinde yaşanmış doğrulanmış gerçek dünya AI güvenlik olaylarını (post-mortem analizleri ve zafiyet taksonomileriyle birlikte) inceleyerek, organizasyonların ve geliştiricilerin yapay zeka sistemlerini güvenli bir şekilde nasıl tasarlaması gerektiğine dair kritik rehberlik sunmayı amaçlamaktadır.
+
 ---
+
 1. Cursor DuneSlide - Dolaylı Prompt Injection ile Sandbox İçi Kilit Kırılması ve Sıfır Tıkla RCE (CVE-2026-50548 / CVE-2026-50549)
 - **Olay Özeti:** Cursor kodlama ajanının, bir MCP araç yanıtı veya web arama sonucunda okuduğu gizli talimatları izleyerek sandbox'ın çalışma dizini parametresini manipüle etmesi ve koruyucu dosyaların üzerine yazarak sıfır tıkla işletim sistemi seviyesinde komut çalıştırması.
 - **AI Güvenlik Temeli:** Dolaylı Prompt Injection ve Güvensiz Kod Yürütme.
