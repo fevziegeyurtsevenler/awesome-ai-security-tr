@@ -84,6 +84,12 @@ META = {
         "PortSwigger LLM lab'ları, HackAPrompt, ücretsiz kurslar ve bug "
         "bounty platformları.",
     ),
+     "10-gercek-dunya-olaylari": (
+        "Gerçek Dünya Olayları",
+        "Doğrulanmış yapay zeka güvenlik olayları ve post-mortem analizleri: "
+        "ajan sandbox kaçışları, MCP zafiyetleri, chatbot istismarları ve "
+        "tedarik zinciri ihlalleri.",
+    ),
 }
 
 FONT_URL = (
