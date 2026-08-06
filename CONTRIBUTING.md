@@ -76,19 +76,35 @@ Bir bölüm 15 kaynağın altındaysa orası doldurulmayı bekliyor demektir —
 
 1. **Fork'la, ekle, PR aç.** Ön izin, issue veya atama gerekmiyor.
 2. Küçük ve sık PR at. 40 linklik tek dev PR yerine 8'erli parçalar hem daha hızlı incelenir hem daha iyi incelenir.
-3. **CI yeşil olmalı.** İki kontrol çalışır: ölü link taraması ve açıklamasız link kontrolü.
+3. **CI yeşil olmalı.** Beş kontrol çalışır: açıklamasız markdown linki, ham URL, tür/dil etiketi, bölümün site üretecine kayıtlı olması ve ölü link taraması.
 4. PR'lar geldikçe küratör tarafından incelenir; uygun olanlar merge edilir.
 
 ## 5. Yerelde kontrol
 
-PR açmadan önce açıklamasız link bırakıp bırakmadığını görmek için:
+PR açmadan önce CI'ın çalıştırdığı biçim kontrollerini kendin koşturabilirsin. Dördü de sessiz kalırsa temizsin:
 
 ```bash
+# 1) Açıklamasız markdown linki
 grep -rnE '^\s*[-*] \[[^]]+\]\([^)]+\)\s*$' kaynaklar/
-```
 
-Bu komut çıktı veriyorsa o satırlara açıklama eklemen gerekiyor. Sessizse temizsin.
+# 2) Ham URL — kaynaklar her zaman [Ad](url) biçiminde olmalı
+grep -rnE '^\s*[-*]?\s*(\*\*[^*]+\*\*:?)?\s*https?://' kaynaklar/
+
+# 3) Eksik veya bozuk tür/dil etiketi
+grep -rn '^- \[' kaynaklar/ | grep -vE '\*\(tür: [^,]+, dil: (TR|EN)\)\*\s*$'
+
+# 4) Bölüm site üretecine kayıtlı mı
+for f in kaynaklar/*.md; do a=$(basename "$f" .md); \
+  grep -q "\"$a\"" araclar/site-uret.py || echo "META'da yok: $a"; done
+```
 
 ## 6. Yeni bölüm önerisi
 
 Mevcut dokuz bölüme sığmayan bir konu varsa önce issue aç. Yeni bölüm en az 15 nitelikli kaynak gerektirir — daha azı mevcut bir bölümün alt başlığı olarak durmalı.
+
+Yeni bölüm eklerken **iki dosyaya dokunman gerekir**:
+
+1. `kaynaklar/NN-kisa-ad.md` — bölümün kendisi (H1 başlık, `>` ile bir cümlelik özet, sonra `##` alt başlıklar)
+2. `araclar/site-uret.py` içindeki `META` sözlüğü — bölümün kısa adı ve arama odaklı meta açıklaması
+
+İkincisini atlarsan bölüm sitede **hiç yayımlanmaz**; üreteç onu sessizce atlar. CI bu durumu yakalar ve PR'ı kırmızıya çevirir.

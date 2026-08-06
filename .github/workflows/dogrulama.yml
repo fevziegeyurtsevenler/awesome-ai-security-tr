@@ -31,6 +31,43 @@ jobs:
           fi
           echo "Tüm girdilerde açıklama var."
 
+      - name: Ham URL var mı?
+        run: |
+          # Markdown linki olmadan doğrudan yazılmış URL'ler de çıplak linktir.
+          # Önceki kontrol yalnızca [ad](url) biçimini yakalıyordu, bunu kaçırıyordu.
+          ihlal=$(grep -rnE '^\s*[-*]?\s*(\*\*[^*]+\*\*:?)?\s*https?://' kaynaklar/ || true)
+          if [ -n "$ihlal" ]; then
+            echo "::error::Ham URL bulundu. Kaynaklar '- [Ad](url) — açıklama' biçiminde olmalı."
+            echo "$ihlal"
+            exit 1
+          fi
+          echo "Ham URL yok."
+
+      - name: Girdi biçimi tam mı?
+        run: |
+          # Her girdi tür ve dil etiketiyle bitmeli.
+          ihlal=$(grep -rn '^- \[' kaynaklar/ \
+                  | grep -vE '\*\(tür: [^,]+, dil: (TR|EN)\)\*\s*$' || true)
+          if [ -n "$ihlal" ]; then
+            echo "::error::Etiketi eksik veya bozuk girdi var. Beklenen son: *(tür: …, dil: TR|EN)*"
+            echo "$ihlal"
+            exit 1
+          fi
+          echo "Tüm girdilerde tür/dil etiketi doğru."
+
+      - name: Her bölüm site üretecine kayıtlı mı?
+        run: |
+          # META'ya eklenmeyen bir bölüm dosyası sitede sessizce görünmez olur.
+          hata=0
+          for f in kaynaklar/*.md; do
+            anahtar=$(basename "$f" .md)
+            if ! grep -q "\"$anahtar\"" araclar/site-uret.py; then
+              echo "::error file=$f::$anahtar, araclar/site-uret.py içindeki META sözlüğünde yok — bu bölüm sitede yayımlanmaz. Kısa ad ve meta açıklama ekleyin."
+              hata=1
+            fi
+          done
+          exit $hata
+
       - name: Bölüm kaynak sayısı sınırlar içinde mi?
         run: |
           hata=0
@@ -46,16 +83,30 @@ jobs:
           done
           exit $hata
 
+  # Ölü link taraması, üçüncü parti sitelerin bot koruması ve coğrafi
+  # kısıtları yüzünden doğası gereği kırılgan: canlı bir adres runner'ın
+  # ağından "connection failed" dönebiliyor. Bu yüzden tarama iki kipte
+  # çalışır:
+  #   - push / PR   → bilgi amaçlı, katkıcıyı BLOKLAMAZ (fail: false)
+  #   - zamanlanmış → yetkili koşu, kırılırsa issue açar
+  # Katkıcının kendi işine dair deterministik kontroller (biçim, etiket,
+  # META kaydı) yukarıdaki "bicim" job'unda ve orası bloklayıcıdır.
   linkler:
     name: Ölü link taraması
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      # resmigazete.gov.tr taramadan çıkarıldı: link geçerli ve Türkiye'den
-      # anında açılıyor, ancak GitHub'ın ABD'deki runner'larından zaman aşımına
-      # uğruyor. Bu bir ölü link değil, coğrafi erişim farkı — taramayı kalıcı
-      # kırmızıya boyamaması için hariç tutuldu, listeden çıkarılmadı.
+      # Hariç tutulanlar. Kural: bir adres yalnızca ELLE doğrulanıp gerçekten
+      # canlı olduğu görüldüğünde ve hata bot korumasından/coğrafi farktan
+      # kaynaklandığında buraya eklenir. Gerçekten ölü linkler listeden
+      # çıkarılır, buraya gizlenmez.
+      #
+      # - resmigazete.gov.tr: Türkiye'den anında açılıyor, GitHub'ın ABD
+      #   runner'larından zaman aşımına uğruyor (coğrafi erişim farkı).
+      # - orca.security/.../vector-database-security-risks: çerez atmak için
+      #   bir kez 302 döndürüyor; çerez tutan istemcide 200. lychee çerez
+      #   tutmadığı için sonsuz yönlendirme görüyor (5 Ağu 2026'da elle teyit).
       - name: lychee
         id: lychee
         uses: lycheeverse/lychee-action@v2
@@ -68,16 +119,27 @@ jobs:
             --accept 200,206,403,429
             --exclude-path ./site
             --exclude 'resmigazete\.gov\.tr'
+            --exclude 'orca\.security/resources/blog/vector-database-security-risks'
             './**/*.md'
-          fail: true
+          fail: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
           output: lychee.md
 
       - name: Rapor özeti
         if: always()
         run: cat lychee.md >> "$GITHUB_STEP_SUMMARY" || true
 
+      # push/PR'da bulunan sorunları uyarı olarak yüzeye çıkar — bloklamadan.
+      - name: Bulunan sorunları uyarı olarak bildir
+        if: success() && github.event_name != 'schedule' && github.event_name != 'workflow_dispatch'
+        run: |
+          if grep -qE '^\* \[(ERROR|[0-9]{3})\]|^\* \[TIMEOUT\]' lychee.md 2>/dev/null; then
+            echo "::warning::Ölü link taraması sorun buldu — ayrıntı için iş özetine bakın. Bu kontrol push/PR'da bloklamaz; haftalık zamanlanmış tarama yetkilidir."
+            grep -E '^\* \[' lychee.md | head -20
+          else
+            echo "Tüm linkler erişilebilir."
+          fi
+
       # Zamanlanmış taramada kırık link bulunursa issue aç.
-      # PR'da issue açma — orada fail yeterli sinyal.
       - name: Kırık link issue'su
         if: failure() && github.event_name == 'schedule'
         uses: peter-evans/create-issue-from-file@v5
