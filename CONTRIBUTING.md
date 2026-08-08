@@ -81,22 +81,17 @@ Bir bölüm 15 kaynağın altındaysa orası doldurulmayı bekliyor demektir —
 
 ## 5. Yerelde kontrol
 
-PR açmadan önce CI'ın çalıştırdığı biçim kontrollerini kendin koşturabilirsin. Dördü de sessiz kalırsa temizsin:
+CI'ın çalıştırdığı biçim denetiminin tamamını tek komutla kendin koşturabilirsin:
 
 ```bash
-# 1) Açıklamasız markdown linki
-grep -rnE '^\s*[-*] \[[^]]+\]\([^)]+\)\s*$' kaynaklar/
-
-# 2) Ham URL — kaynaklar her zaman [Ad](url) biçiminde olmalı
-grep -rnE '^\s*[-*]?\s*(\*\*[^*]+\*\*:?)?\s*https?://' kaynaklar/
-
-# 3) Eksik veya bozuk tür/dil etiketi
-grep -rn '^- \[' kaynaklar/ | grep -vE '\*\(tür: [^,]+, dil: (TR|EN)\)\*\s*$'
-
-# 4) Bölüm site üretecine kayıtlı mı
-for f in kaynaklar/*.md; do a=$(basename "$f" .md); \
-  grep -q "\"$a\"" araclar/site-uret.py || echo "META'da yok: $a"; done
+python3 araclar/bicim-denetle.py
 ```
+
+Denetlediği şeyler: girdi sözleşmesine uymayan satırlar (hangi sebeple uymadığını da söyler), ham URL'ler, site üretecine kayıtlı olmayan bölümler ve bölüm boyutu sınırları.
+
+**Ayırıcı em dash olmalı.** En sık yapılan hata, `[Ad](url)` ile açıklama arasına normal tire (`-`) koymak. Sözleşme em dash (`—`) bekliyor; normal tire kullanılırsa girdi sitede ve aramada **hiç görünmez**. Kopyalanacak karakter: `—`
+
+Denetleyici, girdi sözleşmesini site üretecinin okuduğu aynı dosyadan (`araclar/bicim.py`) alır. Yani buradan geçen her satır sitede de yayımlanır; "CI yeşildi ama sitede yok" durumu olamaz.
 
 ## 6. Yeni bölüm önerisi
 
