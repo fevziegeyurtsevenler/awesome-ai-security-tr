@@ -76,8 +76,9 @@ Bir bölüm 15 kaynağın altındaysa orası doldurulmayı bekliyor demektir —
 
 1. **Fork'la, ekle, PR aç.** Ön izin, issue veya atama gerekmiyor.
 2. Küçük ve sık PR at. 40 linklik tek dev PR yerine 8'erli parçalar hem daha hızlı incelenir hem daha iyi incelenir.
-3. **CI yeşil olmalı.** Beş kontrol çalışır: açıklamasız markdown linki, ham URL, tür/dil etiketi, bölümün site üretecine kayıtlı olması ve ölü link taraması.
-4. PR'lar geldikçe küratör tarafından incelenir; uygun olanlar merge edilir.
+3. **Biçim denetimi yeşil olmalı** — bloklayıcı olan tek kapı bu, ve yerelde `python3 araclar/bicim-denetle.py` ile aynısını koşturabilirsin.
+4. Ölü link taraması PR'da **bloklamaz**, yalnızca uyarı basar; üçüncü parti siteler bot koruması yüzünden canlıyken de hata dönebildiği için yetkili koşu haftalık zamanlanmış olandır.
+5. PR'lar geldikçe küratör tarafından incelenir; uygun olanlar merge edilir.
 
 ## 5. Yerelde kontrol
 
