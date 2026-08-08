@@ -20,68 +20,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Açıklamasız link var mı?
-        run: |
-          # CONTRIBUTING.md kural 1: her linkin yanında Türkçe açıklama olmalı.
-          ihlal=$(grep -rnE '^\s*[-*] \[[^]]+\]\([^)]+\)\s*$' kaynaklar/ || true)
-          if [ -n "$ihlal" ]; then
-            echo "::error::Açıklamasız link bulundu. Her girdi ' — ' ile açıklama içermeli."
-            echo "$ihlal"
-            exit 1
-          fi
-          echo "Tüm girdilerde açıklama var."
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
 
-      - name: Ham URL var mı?
-        run: |
-          # Markdown linki olmadan doğrudan yazılmış URL'ler de çıplak linktir.
-          # Önceki kontrol yalnızca [ad](url) biçimini yakalıyordu, bunu kaçırıyordu.
-          ihlal=$(grep -rnE '^\s*[-*]?\s*(\*\*[^*]+\*\*:?)?\s*https?://' kaynaklar/ || true)
-          if [ -n "$ihlal" ]; then
-            echo "::error::Ham URL bulundu. Kaynaklar '- [Ad](url) — açıklama' biçiminde olmalı."
-            echo "$ihlal"
-            exit 1
-          fi
-          echo "Ham URL yok."
-
-      - name: Girdi biçimi tam mı?
-        run: |
-          # Her girdi tür ve dil etiketiyle bitmeli.
-          ihlal=$(grep -rn '^- \[' kaynaklar/ \
-                  | grep -vE '\*\(tür: [^,]+, dil: (TR|EN)\)\*\s*$' || true)
-          if [ -n "$ihlal" ]; then
-            echo "::error::Etiketi eksik veya bozuk girdi var. Beklenen son: *(tür: …, dil: TR|EN)*"
-            echo "$ihlal"
-            exit 1
-          fi
-          echo "Tüm girdilerde tür/dil etiketi doğru."
-
-      - name: Her bölüm site üretecine kayıtlı mı?
-        run: |
-          # META'ya eklenmeyen bir bölüm dosyası sitede sessizce görünmez olur.
-          hata=0
-          for f in kaynaklar/*.md; do
-            anahtar=$(basename "$f" .md)
-            if ! grep -q "\"$anahtar\"" araclar/site-uret.py; then
-              echo "::error file=$f::$anahtar, araclar/site-uret.py içindeki META sözlüğünde yok — bu bölüm sitede yayımlanmaz. Kısa ad ve meta açıklama ekleyin."
-              hata=1
-            fi
-          done
-          exit $hata
-
-      - name: Bölüm kaynak sayısı sınırlar içinde mi?
-        run: |
-          hata=0
-          for f in kaynaklar/*.md; do
-            n=$(grep -cE '^- \[' "$f" || true)
-            if [ "$n" -lt 10 ]; then
-              echo "::warning file=$f::$f sadece $n kaynak içeriyor (hedef: en az 15)"
-            fi
-            if [ "$n" -gt 40 ]; then
-              echo "::error file=$f::$f $n kaynak içeriyor — üst sınır 40, bölünmeli veya elenmeli"
-              hata=1
-            fi
-          done
-          exit $hata
+      # Tüm biçim kuralları tek yerde: araclar/bicim-denetle.py.
+      # Denetleyici, girdi sözleşmesini site üretecinin okuduğu aynı
+      # dosyadan (araclar/bicim.py) alır — böylece "CI'dan geçti ama
+      # sitede görünmedi" durumu oluşamaz.
+      # Yerelde aynı komutla koşturulabilir.
+      - name: Biçim denetimi
+        run: python3 araclar/bicim-denetle.py
 
   # Ölü link taraması, üçüncü parti sitelerin bot koruması ve coğrafi
   # kısıtları yüzünden doğası gereği kırılgan: canlı bir adres runner'ın

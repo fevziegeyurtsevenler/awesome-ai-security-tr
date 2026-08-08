@@ -16,6 +16,9 @@ import sys
 
 import markdown
 
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+from bicim import girdi_ayristir  # noqa: E402
+
 KOK = pathlib.Path(__file__).resolve().parent.parent
 KAYNAK_DIZIN = KOK / "kaynaklar"
 CIKTI = KOK / "site"
@@ -426,9 +429,8 @@ JS = r"""
 
 # --- ayrıştırma -------------------------------------------------------------
 
-GIRDI_RE = re.compile(
-    r"^- \[(?P<ad>.+?)\]\((?P<url>[^)]+)\) — (?P<aciklama>.+?) \*\(tür: (?P<tur>[^,]+), dil: (?P<dil>TR|EN)\)\*\s*$"
-)
+# Girdi sözleşmesi araclar/bicim.py'de tanımlı (tek kaynak).
+# Biçim denetleyicisi de aynı yerden okur.
 
 
 def satir_ici(metin: str) -> str:
@@ -458,18 +460,9 @@ def bolum_ayristir(yol: pathlib.Path):
         icerik = parcalar[i + 1]
         girdiler, nesir = [], []
         for satir in icerik.split("\n"):
-            g = GIRDI_RE.match(satir)
+            g = girdi_ayristir(satir)
             if g:
-                d = g.groupdict()
-                ac = d["aciklama"].strip()
-                altaysec = "🔧 AltaySec" in ac
-                bakimsiz = "⚠️ bakımsız" in ac
-                ac = ac.replace("🔧 AltaySec", "").replace("⚠️ bakımsız", "").strip()
-                girdiler.append({
-                    "ad": d["ad"].strip(), "url": d["url"].strip(), "aciklama": ac,
-                    "tur": d["tur"].strip(), "dil": d["dil"],
-                    "altaysec": altaysec, "bakimsiz": bakimsiz,
-                })
+                girdiler.append(g)
             elif satir.strip() and not satir.startswith("- ["):
                 nesir.append(satir)
         kisimlar.append({"ad": ad, "kimlik": kimlik(ad), "girdiler": girdiler,
