@@ -531,13 +531,14 @@ def ara_alani(kok: str, yer_tutucu: str) -> str:
 def sayfa(*, baslik, aciklama, govde, yol, jsonld):
     kanonik = f"{TABAN_URL}/{yol}" if yol else f"{TABAN_URL}/"
     tam_baslik = baslik if baslik == SITE_ADI else f"{baslik} — {SITE_ADI}"
+    sekme_baslik = f"{tam_baslik} · Turkish AI Security Resources" if not yol else tam_baslik
     kok = "../" if "/" in yol else ""
     return f"""<!doctype html>
 <html lang="tr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{html.escape(tam_baslik)}</title>
+<title>{html.escape(sekme_baslik)}</title>
 <meta name="description" content="{html.escape(aciklama)}">
 <link rel="canonical" href="{kanonik}">
 <meta name="author" content="{YAZAR}">
