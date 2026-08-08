@@ -13,6 +13,8 @@
   Prompt injection, jailbreak, red teaming, guardrail, ajan/MCP güvenliği, RAG güvenliği, tedarik zinciri ve doğrulanmış gerçek dünya olayları.
 </p>
 
+<p align="center"><em>Curated, CI-verified Turkish-language AI security resource list.</em></p>
+
 <p align="center">
   <a href="https://github.com/fevziegeyurtsevenler/awesome-ai-security-tr/actions/workflows/dogrulama.yml"><img alt="doğrulama" src="https://github.com/fevziegeyurtsevenler/awesome-ai-security-tr/actions/workflows/dogrulama.yml/badge.svg"></a>
   <img alt="kaynak sayısı" src="https://img.shields.io/badge/kaynak-316-8b5cf6">
@@ -125,7 +127,7 @@ Bu liste bir dizin. Konuları sırayla ve derinlemesine anlatan Türkçe rehberl
 
 ```bibtex
 @software{altaysec_awesome_ai_security_tr_2026,
-  author = {{AltaySec}},
+  author = {Yurtsevenler, Fevzi Ege},
   title  = {awesome-ai-security-tr},
   year   = {2026},
   url    = {https://github.com/fevziegeyurtsevenler/awesome-ai-security-tr}
