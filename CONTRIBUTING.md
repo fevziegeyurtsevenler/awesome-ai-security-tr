@@ -69,6 +69,7 @@ Bölüm sahibi veya atama yok. İstediğin bölüme katkı verebilirsin.
 | `kaynaklar/07-rag-uygulama-guvenligi.md` | RAG ve Uygulama Güvenliği |
 | `kaynaklar/08-turkce-kaynaklar-veri-setleri.md` | Türkçe Kaynaklar ve Veri Setleri |
 | `kaynaklar/09-egitim-lab-ctf.md` | Eğitim, Lab ve CTF |
+| `kaynaklar/10-gercek-dunya-olaylari.md` | Gerçek Dünya Olayları |
 
 Bir bölüm 15 kaynağın altındaysa orası doldurulmayı bekliyor demektir — en kolay başlangıç noktası.
 
@@ -96,7 +97,7 @@ Denetleyici, girdi sözleşmesini site üretecinin okuduğu aynı dosyadan (`ara
 
 ## 6. Yeni bölüm önerisi
 
-Mevcut dokuz bölüme sığmayan bir konu varsa önce issue aç. Yeni bölüm en az 15 nitelikli kaynak gerektirir — daha azı mevcut bir bölümün alt başlığı olarak durmalı.
+Mevcut on bölüme sığmayan bir konu varsa önce issue aç. Yeni bölüm en az 15 nitelikli kaynak gerektirir — daha azı mevcut bir bölümün alt başlığı olarak durmalı.
 
 Yeni bölüm eklerken **iki dosyaya dokunman gerekir**:
 

@@ -10,13 +10,13 @@
 
 <p align="center">
   <strong>Türkçe açıklamalı, küratörlü ve CI ile doğrulanan yapay zeka güvenliği kaynak listesi.</strong><br>
-  Prompt injection, jailbreak, red teaming, guardrail, ajan/MCP güvenliği, RAG güvenliği ve tedarik zinciri.
+  Prompt injection, jailbreak, red teaming, guardrail, ajan/MCP güvenliği, RAG güvenliği, tedarik zinciri ve doğrulanmış gerçek dünya olayları.
 </p>
 
 <p align="center">
   <a href="https://github.com/fevziegeyurtsevenler/awesome-ai-security-tr/actions/workflows/dogrulama.yml"><img alt="doğrulama" src="https://github.com/fevziegeyurtsevenler/awesome-ai-security-tr/actions/workflows/dogrulama.yml/badge.svg"></a>
-  <img alt="kaynak sayısı" src="https://img.shields.io/badge/kaynak-301-8b5cf6">
-  <img alt="bölüm" src="https://img.shields.io/badge/b%C3%B6l%C3%BCm-9-6366f1">
+  <img alt="kaynak sayısı" src="https://img.shields.io/badge/kaynak-316-8b5cf6">
+  <img alt="bölüm" src="https://img.shields.io/badge/b%C3%B6l%C3%BCm-10-6366f1">
   <a href="LICENSE"><img alt="lisans" src="https://img.shields.io/badge/lisans-CC%20BY%204.0-22d3ee"></a>
   <a href="https://altaysec.com.tr"><img alt="AltaySec" src="https://img.shields.io/badge/AltaySec-altaysec.com.tr-0f172a"></a>
 </p>
@@ -35,21 +35,23 @@ Türkçe yapay zeka güvenliği için **kaynak dizini**. İngilizce awesome-list
 | **Uygulamamı güvene almam lazım** | [Değerlendirme ve Standartlar](kaynaklar/04-degerlendirme-standartlar.md) → [Guardrail ve Savunma](kaynaklar/03-guardrail-savunma.md) → [RAG ve Uygulama Güvenliği](kaynaklar/07-rag-uygulama-guvenligi.md) |
 | **Ajan/MCP sistemi kuruyorum** | [Ajan, Araç ve MCP Güvenliği](kaynaklar/06-agent-mcp-guvenligi.md) → ölümcül üçlü kontrolü |
 | **Türkçe özelinde ne değişiyor?** | [Türkçe Kaynaklar ve Veri Setleri](kaynaklar/08-turkce-kaynaklar-veri-setleri.md) — ölçülmüş bulgular aşağıda |
+| **Bu gerçekten yaşandı mı?** | [Gerçek Dünya Olayları](kaynaklar/10-gercek-dunya-olaylari.md) — CVE'li, post-mortem'li doğrulanmış vakalar |
 | **Sıralı bir öğrenme planı istiyorum** | Bu liste "ne var" der; sıra için [LLM Security Roadmap](https://github.com/fevziegeyurtsevenler/LLM-Security-Roadmap) |
 
 ## Bölümler
 
 | # | Bölüm | Kapsam | Kaynak |
 |---|---|---|---|
-| 01 | [Prompt Injection](kaynaklar/01-prompt-injection.md) | Doğrudan/dolaylı injection, ölümcül üçlü, gerçek dünya vakaları, tespit araçları | 35 |
+| 01 | [Prompt Injection](kaynaklar/01-prompt-injection.md) | Doğrudan/dolaylı injection, ölümcül üçlü, akademik literatür, tespit araçları | 31 |
 | 02 | [Jailbreak ve Red Teaming](kaynaklar/02-jailbreak-red-teaming.md) | Saldırı yöntemleri, otomasyon çerçeveleri, metodoloji, arenalar | 38 |
 | 03 | [Guardrail ve Savunma](kaynaklar/03-guardrail-savunma.md) | Koruma katmanları, guard modelleri, PII maskeleme, aşırı-red problemi | 35 |
 | 04 | [Değerlendirme ve Standartlar](kaynaklar/04-degerlendirme-standartlar.md) | OWASP, ATLAS, NIST, ölçüt çerçeveleri, şeffaflık ve olay kayıtları | 34 |
-| 05 | [Model ve Tedarik Zinciri](kaynaklar/05-model-tedarik-zinciri.md) | Model dosyası riskleri, veri zehirlenmesi, imzalama, bağımlılıklar | 33 |
+| 05 | [Model ve Tedarik Zinciri](kaynaklar/05-model-tedarik-zinciri.md) | Model dosyası riskleri, veri zehirlenmesi, imzalama, bağımlılıklar | 37 |
 | 06 | [Ajan, Araç ve MCP Güvenliği](kaynaklar/06-agent-mcp-guvenligi.md) | Tool poisoning, yetki sınırlama, ajan denetimi, gözlemlenebilirlik | 31 |
-| 07 | [RAG ve Uygulama Güvenliği](kaynaklar/07-rag-uygulama-guvenligi.md) | Bilgi tabanı zehirlenmesi, vektör veritabanı, veri sızıntısı, API katmanı | 27 |
+| 07 | [RAG ve Uygulama Güvenliği](kaynaklar/07-rag-uygulama-guvenligi.md) | Bilgi tabanı zehirlenmesi, vektör veritabanı, veri sızıntısı, API katmanı | 29 |
 | 08 | [Türkçe Kaynaklar ve Veri Setleri](kaynaklar/08-turkce-kaynaklar-veri-setleri.md) | Türkçeye özgü ölçümler, veri setleri, yerel model ve kurumlar | 33 |
 | 09 | [Eğitim, Lab ve CTF](kaynaklar/09-egitim-lab-ctf.md) | Oynanabilir laboratuvarlar, yarışmalar, ölçütler, bug bounty | 35 |
+| 10 | [Gerçek Dünya Olayları](kaynaklar/10-gercek-dunya-olaylari.md) | Doğrulanmış olaylar, CVE'ler ve post-mortem analizleri | 13 |
 
 ## Neden Türkçe için ayrı bir liste?
 
