@@ -33,6 +33,12 @@ Fark şu: iyi açıklama okuyucunun **tıklayıp tıklamayacağına karar vermes
 
 Eklediğin her kaynağı açıp inceledin mi? Bu listenin tek gerçek değeri bu. Bir dil modeline liste doldurtmak, listeyi diğer yüz listeden ayırt edilemez hâle getirir — ve bu repo tam da o listelerden farklı olmak için var.
 
+### Açıklama kısa olsun — bu bir dizin
+
+Ölçüm: mevcut 317 girdinin medyanı **303 karakter**, %95'i 506 karakterin altında. Bir girdi paragrafa dönüştüğünde tarama işlevini kaybediyor. CI 700 karakterin üstünde uyarı basar (bloklamaz).
+
+Uzun bir kaynağı kısaltmanın yolu, sayıları atmak değil **en karar-verdirici olanı tutmak**: on rakamdan ikisi okuyucunun tıklama kararını değiştiriyorsa diğer sekizi makalede kalabilir. Kaynağın kendi çekincesi ise (ör. "tek modelle sınırlı", "benchmark'ın yarısı kendi bulgusu") her zaman tutulur — o çekince, üçüncü bir başarı oranından daha değerlidir.
+
 ### Bölüm başına 15-40 kaynak
 
 Alt sınır ciddiyet, üst sınır seçicilik içindir. Bir bölüm 40'ı geçiyorsa ya bölünmeli ya da zayıf girdiler elenmeli.

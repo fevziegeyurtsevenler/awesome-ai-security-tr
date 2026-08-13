@@ -14,8 +14,8 @@ import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from bicim import (  # noqa: E402
-    BOLUM_ALT_SINIR, BOLUM_UST_SINIR, GIRDI_ADAYI_RE, HAM_URL_RE,
-    girdi_ayristir, neden_ayrismadi,
+    ACIKLAMA_UYARI_SINIRI, BOLUM_ALT_SINIR, BOLUM_UST_SINIR, GIRDI_ADAYI_RE,
+    HAM_URL_RE, girdi_ayristir, neden_ayrismadi,
 )
 
 KOK = pathlib.Path(__file__).resolve().parent.parent
@@ -55,8 +55,15 @@ def denetle():
         for i, satir in enumerate(satirlar, 1):
             # 1) Girdi adayı sözleşmeye uyuyor mu?
             if GIRDI_ADAYI_RE.match(satir):
-                if girdi_ayristir(satir):
+                g = girdi_ayristir(satir)
+                if g:
                     girdi_sayisi += 1
+                    n = len(g["aciklama"])
+                    if n > ACIKLAMA_UYARI_SINIRI:
+                        uyari(goreli, f"satır {i}: açıklama {n} karakter "
+                                      f"(uyarı sınırı {ACIKLAMA_UYARI_SINIRI}, liste medyanı ~300). "
+                                      "Dizin girdisi taranabilir kalmalı — en karar-verdirici "
+                                      "sayıyı tutup gerisini kısaltın.")
                 else:
                     hata(goreli, i, f"Girdi sözleşmesine uymuyor — {neden_ayrismadi(satir)}. "
                                     "Bu satır sitede ve aramada görünmez.")

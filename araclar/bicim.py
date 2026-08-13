@@ -26,6 +26,12 @@ HAM_URL_RE = re.compile(r"^\s*[-*]?\s*(\*\*[^*]+\*\*:?)?\s*https?://")
 BOLUM_ALT_SINIR = 15
 BOLUM_UST_SINIR = 40
 
+# Açıklama uzunluğu. Bu bir dizin: girdi taranabilir kalmalı.
+# Ölçüm (8 Ağu 2026, 317 girdi): medyan 303, %95 dilim 506 karakter.
+# Üst sınır uyarı olarak konur — bloklamaz, ama girdi paragrafa dönüşünce
+# katkıcı bunu PR'da görür ve kısaltabilir.
+ACIKLAMA_UYARI_SINIRI = 700
+
 
 def girdi_ayristir(satir: str):
     """Satır sözleşmeye uyuyorsa alanları döndürür, uymuyorsa None."""
