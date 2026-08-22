@@ -28,6 +28,16 @@ REPO_URL = "https://github.com/fevziegeyurtsevenler/awesome-ai-security-tr"
 YAZAR = "Fevzi Ege Yurtsevenler"
 SON_GUNCELLEME = "2026-08-03"
 
+# İlk yayın tarihleri (datePublished). Kaynak: her bölüm dosyasının repodaki
+# ilk commit tarihi (git log --diff-filter=A --date=short). CI shallow
+# checkout ile koştuğu için git geçmişi yerine burada sabit tutulur; yeni
+# bölüm eklenirse ilk commit tarihi buraya işlenir, kayıt yoksa SITE_YAYIN
+# (deponun ilk sürüm tarihi) kullanılır.
+SITE_YAYIN = "2026-08-03"
+YAYIN_TARIHLERI = {
+    "10-gercek-dunya-olaylari": "2026-08-08",
+}
+
 SITE_ADI = "Yapay Zeka Güvenliği Kaynakları"
 SITE_ACIKLAMA = (
     "Türkçe açıklamalı, küratörlü ve CI ile doğrulanan yapay zeka güvenliği "
@@ -739,11 +749,18 @@ def uret():
         sayfa(baslik="Bölümler", aciklama=f"Yapay zeka güvenliği kılavuzunun {len(bolumler)} bölümü: "
               + ", ".join(b["ad"] for b in bolumler) + ".",
               govde=liste_govde, yol="bolumler.html",
-              jsonld={"@context": "https://schema.org", "@type": "ItemList", "name": "Bölümler",
-                      "numberOfItems": len(bolumler),
-                      "itemListElement": [{"@type": "ListItem", "position": i, "name": b["ad"],
-                                           "url": f"{TABAN_URL}/{b['cikti']}"}
-                                          for i, b in enumerate(bolumler, 1)]}),
+              # datePublished, ItemList'te geçerli bir özellik olmadığı için
+              # liste bir CollectionPage'in mainEntity'si olarak sarılıyor.
+              jsonld={"@context": "https://schema.org", "@type": "CollectionPage",
+                      "name": "Bölümler", "url": f"{TABAN_URL}/bolumler.html",
+                      "inLanguage": "tr-TR",
+                      "datePublished": SITE_YAYIN, "dateModified": SON_GUNCELLEME,
+                      "isPartOf": {"@id": f"{TABAN_URL}/#website"},
+                      "mainEntity": {"@type": "ItemList", "name": "Bölümler",
+                                     "numberOfItems": len(bolumler),
+                                     "itemListElement": [{"@type": "ListItem", "position": i, "name": b["ad"],
+                                                          "url": f"{TABAN_URL}/{b['cikti']}"}
+                                                         for i, b in enumerate(bolumler, 1)]}}),
         encoding="utf-8")
 
     # --- bölüm sayfaları ---
@@ -791,6 +808,7 @@ def uret():
             "@context": "https://schema.org", "@type": "Article",
             "headline": f"{b['ad']} — Türkçe kaynaklar", "description": b["meta"],
             "inLanguage": "tr-TR", "url": f"{TABAN_URL}/{b['cikti']}",
+            "datePublished": YAYIN_TARIHLERI.get(b["anahtar"], SITE_YAYIN),
             "dateModified": SON_GUNCELLEME, "author": {"@type": "Person", "name": YAZAR},
             "isPartOf": {"@id": f"{TABAN_URL}/#website"},
             "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [
@@ -800,6 +818,71 @@ def uret():
         (CIKTI / b["cikti"]).write_text(
             sayfa(baslik=b["ad"], aciklama=b["meta"], govde=govde, yol=b["cikti"], jsonld=jsonld),
             encoding="utf-8")
+
+    # --- llms.txt + llms-full.txt ---
+    # llmstxt.org biçimi: H1 + özet blockquote + bağlantı listeleri.
+    # İki dosya da sayfalarla aynı ayrıştırılmış veriden üretilir; elle
+    # güncellenen ikinci bir kopya yoktur.
+    llms = [
+        f"# {SITE_ADI}",
+        "",
+        f"> {SITE_ACIKLAMA}",
+        "",
+        f"Toplam {toplam} kaynak, {len(bolumler)} bölüm. Her kaynağın yanında neden "
+        "listelendiğini anlatan 1-2 cümlelik Türkçe açıklama var; ölü linkler CI ile "
+        f"haftalık taranıyor. Küratör: {YAZAR}. Lisans: CC BY 4.0. "
+        f"Tüm kaynakların tam listesi: {TABAN_URL}/llms-full.txt",
+        "",
+        "## Bölümler",
+        "",
+    ]
+    llms += [f"- [{b['ad']}]({TABAN_URL}/{b['cikti']}): {b['meta']}" for b in bolumler]
+    llms += [
+        "",
+        "## Katkı",
+        "",
+        f"- [Katkı rehberi]({REPO_URL}/blob/main/CONTRIBUTING.md): PR ile kaynak "
+        "ekleme/çıkarma kuralları — her girdiye Türkçe açıklama zorunlu",
+        f"- [Kaynak repo]({REPO_URL}): listenin Markdown kaynağı ve CI doğrulaması",
+        "",
+        "## Ekosistem",
+        "",
+        "- [AltaySec](https://altaysec.com.tr): küratörün Türkçe yapay zeka güvenliği çalışmaları",
+        "- [turkish-casefold-evasion](https://github.com/fevziegeyurtsevenler/turkish-casefold-evasion): "
+        "Türkçe İ küçültme ile kelime filtresi atlatma ölçümü",
+        "- [turkish-over-refusal-set](https://github.com/fevziegeyurtsevenler/turkish-over-refusal-set): "
+        "Türkçe aşırı reddetme ölçüm seti",
+        "- [guardrail-arena](https://github.com/fevziegeyurtsevenler/guardrail-arena): "
+        "guardrail'lerin Türkçe saldırılardaki kaçırma oranı ölçümü",
+        "",
+    ]
+    (CIKTI / "llms.txt").write_text("\n".join(llms), encoding="utf-8")
+
+    dolu = [
+        f"# {SITE_ADI} — tam kaynak listesi",
+        "",
+        f"> {SITE_ACIKLAMA}",
+        "",
+        f"Toplam {toplam} kaynak, {len(bolumler)} bölüm. Kısa sürüm: {TABAN_URL}/llms.txt",
+        "",
+    ]
+    for b in bolumler:
+        dolu.append(f"## Bölüm {b['no']} · {b['baslik']} ({b['sayi']} kaynak)")
+        dolu.append(f"{TABAN_URL}/{b['cikti']}")
+        dolu.append("")
+        if b["ozet"]:
+            dolu.append(f"> {b['ozet']}")
+            dolu.append("")
+        for k in b["kisimlar"]:
+            if not k["girdiler"]:
+                continue
+            dolu.append(f"### {k['ad']}")
+            dolu.append("")
+            for g in k["girdiler"]:
+                dolu.append(f"- {g['ad']} — {g['aciklama']}")
+                dolu.append(f"  {g['url']}")
+            dolu.append("")
+    (CIKTI / "llms-full.txt").write_text("\n".join(dolu), encoding="utf-8")
 
     # --- sitemap + robots ---
     yollar_x = ["", "bolumler.html"] + [b["cikti"] for b in bolumler]
@@ -816,7 +899,7 @@ def uret():
     (CIKTI / ".nojekyll").write_text("", encoding="utf-8")
 
     print(f"site üretildi: {len(bolumler)} bölüm, {toplam} kaynak, "
-          f"{len(yollar_x)} sayfa, {len(indeks)} arama kaydı")
+          f"{len(yollar_x)} sayfa, {len(indeks)} arama kaydı, llms.txt + llms-full.txt")
     return 0
 
 
