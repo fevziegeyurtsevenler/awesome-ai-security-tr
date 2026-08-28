@@ -326,6 +326,13 @@ a:hover{text-decoration-color:var(--kizil)}
             font-size:.85rem;color:var(--kursun)}
 .alt a{color:var(--kursun)}
 .alt a:hover{color:var(--murekkep)}
+
+/* ---------- sıkça sorulan sorular ---------- */
+.sss{display:flex;flex-direction:column;gap:0;max-width:72ch}
+.sss > div{padding:1.4rem 0;border-top:1px solid var(--cizgi)}
+.sss > div:last-child{border-bottom:1px solid var(--cizgi)}
+.sss h3{font-family:var(--ff-sans);font-size:1.05rem;font-weight:600;line-height:1.4;margin:0 0 .5rem}
+.sss p{margin:0;color:var(--kursun);line-height:1.65}
 body{display:flex;flex-direction:column;min-height:100vh}
 main{flex:1}
 """
@@ -667,6 +674,36 @@ def uret():
         for r, n, k, u in OLCUMLER
     )
 
+    # --- sıkça sorulan sorular ---
+    # Her cevap sayfada zaten yazan bilgiden türetilir; kaynak sayısı ve bölüm
+    # sayısı ayrıştırılmış veriden gelir (elle girilmez). Görünür bölüm ile
+    # FAQPage şeması aynı SSS listesinden üretilir, böylece ikisi ayrışamaz.
+    kategori_listesi = ", ".join(b["ad"] for b in bolumler)
+    SSS = [
+        ("Bu dizin nedir?",
+         "Türkçe açıklamalı, küratörlü ve CI ile doğrulanan bir yapay zeka güvenliği "
+         "kaynak kılavuzu. Prompt injection, jailbreak, red teaming, guardrail, ajan/MCP "
+         "güvenliği, RAG güvenliği ve model tedarik zinciri gibi konularda seçilmiş "
+         "kaynakları tek yerde toplar."),
+        ("Dizinde kaç kaynak var?",
+         f"Şu an {toplam} kaynak, {len(bolumler)} bölüm hâlinde düzenli. Her kaynak "
+         "listeye eklenmeden önce açılıp okundu ve ölü linkler CI ile haftalık taranıyor."),
+        ("Hangi bölümler ve kategoriler var?",
+         f"{len(bolumler)} bölüm var: {kategori_listesi}."),
+        ("Nasıl katkı sağlanır?",
+         "Bölüm sahibi, atama veya sıra yok — istediğiniz bölüme PR açabilirsiniz. Tek "
+         "kural: her kaynağın yanında neden listelendiğini anlatan 1-2 cümlelik Türkçe "
+         "açıklama olacak ve eklediğiniz kaynağı açıp okumuş olacaksınız. Zayıf bulduğunuz "
+         "bir girdinin çıkarılmasını önermek de katkıdır."),
+        ("Ücretsiz mi, hangi lisansla yayımlanıyor?",
+         "Evet, tamamı ücretsiz ve açık. İçerik CC BY 4.0 lisansıyla yayımlanıyor; "
+         "kaynak deposu GitHub'da herkese açık."),
+    ]
+    sss_html = "\n".join(
+        f"<div><h3>{html.escape(soru)}</h3><p>{html.escape(cevap)}</p></div>"
+        for soru, cevap in SSS
+    )
+
     ana_govde = f"""<section class="tez"><div class="kabuk">
   <p class="tez-etiket can can-1">Bu liste neden Türkçe</p>
   <div class="kanit">
@@ -717,6 +754,11 @@ def uret():
      eklendikçe değil, elendikçe değer kazanıyor.</p>
   <p class="not"><a href="{REPO_URL}/blob/main/CONTRIBUTING.md">Katkı rehberi ↗</a> ·
      <a href="{REPO_URL}">Depo ↗</a></p>
+</div></section>
+
+<section class="blok" id="sss"><div class="kabuk">
+  <h2 class="blok-basi">Sıkça Sorulan Sorular</h2>
+  <div class="sss">{sss_html}</div>
 </div></section>"""
 
     ana_jsonld = {
@@ -731,6 +773,11 @@ def uret():
              "hasPart": [{"@type": "WebPage", "name": b["ad"],
                           "url": f"{TABAN_URL}/{b['cikti']}", "description": b["meta"]}
                          for b in bolumler]},
+            {"@type": "FAQPage", "@id": f"{TABAN_URL}/#faq", "inLanguage": "tr-TR",
+             "isPartOf": {"@id": f"{TABAN_URL}/#website"},
+             "mainEntity": [{"@type": "Question", "name": soru,
+                             "acceptedAnswer": {"@type": "Answer", "text": cevap}}
+                            for soru, cevap in SSS]},
         ],
     }
     (CIKTI / "index.html").write_text(
