@@ -17,7 +17,7 @@
 
 <p align="center">
   <a href="https://github.com/fevziegeyurtsevenler/awesome-ai-security-tr/actions/workflows/dogrulama.yml"><img alt="doğrulama" src="https://github.com/fevziegeyurtsevenler/awesome-ai-security-tr/actions/workflows/dogrulama.yml/badge.svg"></a>
-  <img alt="kaynak sayısı" src="https://img.shields.io/badge/kaynak-326-8b5cf6">
+  <img alt="kaynak sayısı" src="https://img.shields.io/badge/kaynak-327-8b5cf6">
   <img alt="bölüm" src="https://img.shields.io/badge/b%C3%B6l%C3%BCm-10-6366f1">
   <a href="LICENSE"><img alt="lisans" src="https://img.shields.io/badge/lisans-CC%20BY%204.0-22d3ee"></a>
   <a href="https://altaysec.com.tr"><img alt="AltaySec" src="https://img.shields.io/badge/AltaySec-altaysec.com.tr-0f172a"></a>
@@ -47,7 +47,7 @@ Türkçe yapay zeka güvenliği için **kaynak dizini**. İngilizce awesome-list
 | 01 | [Prompt Injection](kaynaklar/01-prompt-injection.md) | Doğrudan/dolaylı injection, ölümcül üçlü, akademik literatür, tespit araçları | 32 |
 | 02 | [Jailbreak ve Red Teaming](kaynaklar/02-jailbreak-red-teaming.md) | Saldırı yöntemleri, otomasyon çerçeveleri, metodoloji, arenalar | 37 |
 | 03 | [Guardrail ve Savunma](kaynaklar/03-guardrail-savunma.md) | Koruma katmanları, guard modelleri, PII maskeleme, aşırı-red problemi | 35 |
-| 04 | [Değerlendirme ve Standartlar](kaynaklar/04-degerlendirme-standartlar.md) | OWASP, ATLAS, NIST, ölçüt çerçeveleri, şeffaflık ve olay kayıtları | 36 |
+| 04 | [Değerlendirme ve Standartlar](kaynaklar/04-degerlendirme-standartlar.md) | OWASP, ATLAS, NIST, ölçüt çerçeveleri, şeffaflık ve olay kayıtları | 37 |
 | 05 | [Model ve Tedarik Zinciri](kaynaklar/05-model-tedarik-zinciri.md) | Model dosyası riskleri, veri zehirlenmesi, imzalama, bağımlılıklar | 37 |
 | 06 | [Ajan, Araç ve MCP Güvenliği](kaynaklar/06-agent-mcp-guvenligi.md) | Tool poisoning, yetki sınırlama, ajan denetimi, gözlemlenebilirlik | 32 |
 | 07 | [RAG ve Uygulama Güvenliği](kaynaklar/07-rag-uygulama-guvenligi.md) | Bilgi tabanı zehirlenmesi, vektör veritabanı, veri sızıntısı, API katmanı | 30 |
